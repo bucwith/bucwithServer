@@ -32,9 +32,11 @@ public class CommunityService {
 
     //@Transactional
     public Long commuSave(CommuSaveReqDto reqDto){
+        // TODO 기왕 가져오는거 쓰는 게 좋지 않을까?
         User user  = userRepository.findById(reqDto.getUser().getUserId())
                 .orElseThrow(() -> new IllegalArgumentException("해당 사용자가 없습니다. id=" + reqDto.getUser().getUserId()));
 
+        // TODO toEntity(User user)
         Long commuId = communityRepository.save(reqDto.toEntity()).getCommuId();
 
         if(!CollectionUtils.isEmpty(reqDto.getCategory())){
@@ -83,6 +85,7 @@ public class CommunityService {
         for (Community community : communities){
             Long likeCnt = clikeRepository.CountByCommunity(community.getCommuId());
             Long commentCnt = commentRepository.CountByCommunity(community.getCommuId());
+            // TODO : 한번만 가져와서 HashMap Or List에 저장해두고 비교하는게 나을 것 같음!
             List<Category> categoryList = commuCateRepository.findByCommunity(community).stream().map(CommuCate::getCategory).collect(Collectors.toList());
             Boolean isLike = clikeRepository.existsByCommunityAndUser(community, user);
 
@@ -101,7 +104,7 @@ public class CommunityService {
 
         List<Category> categoryList = commuCateRepository.findByCommunity(community).stream().map(CommuCate::getCategory).collect(Collectors.toList());
         if(!Objects.equals(categoryList, reqDto.getCategory())){
-            commuCateRepository.deleteAllInBatch(community.getCommuCates());
+            commuCateRepository.deleteAllInBatch(community.getCommuCates()); // TODO 이게 뭔지 궁금.
             SaveCategory(commuId, reqDto.getCategory());
         }
 
@@ -128,6 +131,7 @@ public class CommunityService {
 
         List<CommentAllResDto> commentAll = new ArrayList<>();
 
+        // TODO 대댓글은 더보기 클릭시 확인하는게 좋아보임. 댓글 조회, 대댓글 조회 구분 의견입니다 ㅎㅎ..
         for (Comment comment : comments){
             List<CommentResDto> commentResDtos = commentRepository.findReplyDesc(commuId, comment.getComId()).stream()
                     .map(CommentResDto::new)

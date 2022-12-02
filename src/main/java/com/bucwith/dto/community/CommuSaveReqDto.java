@@ -15,6 +15,8 @@ import java.util.List;
 @NoArgsConstructor
 public class CommuSaveReqDto {
 
+    // 왜 UserId로 안받지?!
+    // CommunityService.commuSave 에서 어차피 User 조회 함.
     private User user;
     @NotBlank(message = "내용을 입력해주세요")
     private String content;
@@ -32,6 +34,7 @@ public class CommuSaveReqDto {
     }
 
 
+    // 여기서 User Param으로 받아서 넣어주면 안되나?!
     public Community toEntity(){
         return Community.builder()
                 .user(user)

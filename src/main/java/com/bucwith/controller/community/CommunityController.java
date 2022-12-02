@@ -36,7 +36,7 @@ public class CommunityController extends CommController {
      */
     @GetMapping()
     public ResponseEntity findCommuAll() throws BaseException {
-        Long userId=jwtService.getUserId();
+        Long userId=jwtService.getUserId(); // TODO JWT service SERVICE 단에 구현하면 안되나?
         List<CommuResDto> commu = communityService.findCommuAllDesc(userId);
         return SuccessReturn(commu);
     }
